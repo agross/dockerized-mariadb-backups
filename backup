@@ -23,10 +23,11 @@ echo Saving backup to $backup_file
 mkdir --parents "$backup_dir"
 docker exec "$container_name" sh -c "exec mysqldump --all-databases --user=root --password="$mariadb_root_password"" | gzip -9 > "$backup_file"
 
-if [[ $? != 0 ]]; then
+exit_code=$?
+if [[ $exit_code != 0 ]]; then
   >&2 echo Backup failed, removing $backup_file
   rm -f $backup_file > /dev/null
-  exit $?
+  exit $exit_code
 fi
 
 find "$backup_dir" -maxdepth 1 -type f -printf '%Ts\t%p\n' | sort --numeric-sort --reverse | tail --lines="+$((( $keep_backups + 1 )))" | cut --fields=2- | while IFS= read -r file; do
