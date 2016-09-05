@@ -34,3 +34,13 @@ find "$backup_dir" -maxdepth 1 -type f -printf '%Ts\t%p\n' | sort --numeric-sort
   echo Removing old backup $file
   rm -f "$file"
 done
+
+docker exec "$container_name" mysqloptimize --all-databases --user=root --password="$mariadb_root_password"
+
+exit_code=$?
+if [[ $exit_code != 0 ]]; then
+  >&2 echo Database optimizaion failed with status $exit_code
+  exit $exit_code
+else
+  echo Database optimization succeeded
+fi
