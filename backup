@@ -21,7 +21,7 @@ keep_backups="$4"
 
 echo Saving backup to $backup_file
 mkdir --parents "$backup_dir"
-docker exec "$container_name" sh -c "exec mysqldump --all-databases --user=root --password="$mariadb_root_password"" | gzip -9 > "$backup_file"
+docker exec "$container_name" mysqldump --all-databases --user=root --password="$mariadb_root_password" | gzip -9 > "$backup_file"
 
 exit_code=$?
 if [[ $exit_code != 0 ]]; then
