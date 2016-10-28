@@ -26,7 +26,7 @@ docker exec "$container_name" mysqldump --all-databases --user=root --password="
 exit_code=$?
 if [[ $exit_code != 0 ]]; then
   >&2 echo Backup failed, removing $backup_file
-  rm -f $backup_file > /dev/null
+  rm -f "$backup_file" > /dev/null
   exit $exit_code
 fi
 
